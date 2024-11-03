@@ -1,1 +1,66 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+.wheelhouse/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+ENV/
 env/
+env.bak/
+venv.bak/
+.venv.bak/
+
+# PyCharm specific
+.idea/
+*.iml
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Python-specific
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
+htmlcov/
+coverage.xml
+*.cover
+.coverage
+.cache
+
+# Testing
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+*.test
+
+# Miscellaneous
+*.DS_Store
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+*.env
