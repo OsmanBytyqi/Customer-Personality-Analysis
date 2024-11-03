@@ -35,12 +35,14 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
     cd customer-data-analysis
     ```
 
-3. Add an Environment Setup Step (optional)
-    ```bash
-    python -m venv env
-    source env/bin/activate
-    ```
-4. Install the required packages:
+3. Add an Environment Setup (optional)
+   ```bash
+   python -m venv env
+   ```
+4. Activate the Environment
+   - **macOS/Linux**: Use `source env/bin/activate` to activate the virtual environment.
+   - **Windows**: Use `env\Scripts\activate` to activate the virtual environment. 
+5. Install the required packages:
     ```bash
     pip install -r requirements.txt
     ```
