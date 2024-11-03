@@ -93,6 +93,8 @@ data['Accepted'] = (data[campaign_columns].sum(axis=1) > 0).astype(int)
 ## Dimensionality Reduction
 # remove ID as it does not provide any meaningful information
 # remove Z_CostContact and Z_Revenue as they have the same value for all records
+data.drop(columns=['MntWines', 'MntFruits', 'MntMeatProducts',
+                           'MntFishProducts', 'MntSweetProducts', 'MntGoldProds'], inplace=True)
 data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue'], inplace=True)
 data.drop(columns=['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response'], inplace=True)
 print(data.columns)
@@ -105,6 +107,7 @@ data['Age'] = current_year - data['Year_Birth']
 
 # Create Family Size feature
 data['Family_Size'] = data['Kidhome'] + data['Teenhome']
+data.drop(columns=['Kidhome', 'Teenhome'], inplace=True)
 
 # Calculate 'Customer tenure'
 data['Customer_Tenure'] = (datetime.now() - data['Dt_Customer']).dt.days
@@ -112,7 +115,7 @@ data['Customer_Tenure'] = (datetime.now() - data['Dt_Customer']).dt.days
 data.drop(columns=['Year_Birth'], inplace=True)
 data.drop(columns=['Dt_Customer'], inplace=True)
 
-print(data[['Age', 'Kidhome', 'Teenhome', 'Family_Size', 'Customer_Tenure']].head())
+print(data[['Age', 'Family_Size', 'Customer_Tenure']].head())
 
 
 ## Discretization
@@ -141,10 +144,6 @@ mnt_normalized = data['Total_Mnt_Normalized'] = data['Total_Mnt_Normalized'].rou
 
 # Display the first few rows of 'Total_Mnt' and 'Total_Mnt_Normalized' for verification
 print(data[['Total_Mnt', 'Total_Mnt_Normalized']].head())
-
-# Selected features for analysis
-selected_features = data[['Income', 'Kidhome', 'Teenhome',
-                          'Recency', 'NumDealsPurchases', 'Total_Mnt', 'Age', 'Family_Size']]
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
