@@ -57,20 +57,7 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
    - Calculated `Age` from `Year_Birth`.
    - Created a `Family_Size` feature based on `Kidhome` and `Teenhome`.
    - Created a `Customer_Tenure` feature based on `Dt_customer`
-
-## Exploratory Data Analysis
-Several analyses were performed to understand data distribution and feature relationships:
-
-1. **Income Grouping**: Discretized `Income` into categories (`Low`, `Medium`, `High`, `Very High`) for further analysis.
-
-## Outlier Detection
-
-- Displayed the outliers to assess their impact on the analysis.
-
-## Results
-
-- **Correlation Analysis**: Key features such as `Income` and `Total_Mnt` were found to be correlated.
-- **PCA Analysis**: The first two principal components capture a significant portion of the variance, simplifying visualization without losing much information.
+5. **Income Grouping**: Discretized `Income` into categories (`Low`, `Medium`, `High`, `Very High`) for further analysis.
 
 ## Contributing
 
