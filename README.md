@@ -47,7 +47,7 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
 
 ## Data Preprocessing
 
-1. **Duplicate Removal**: Duplicates were removed based on the `Year_Birth` column.
+1. **Duplicate Removal**: Checked for duplicates to remove.
 2. **Data Type Conversion**:
    - Converted `Dt_Customer` to datetime format.
 3. **Handling Missing Values**:
