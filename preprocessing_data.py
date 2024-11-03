@@ -150,6 +150,25 @@ principal_components = pca.fit_transform(selected_features_scaled)
 # Create a DataFrame for PCA results
 pca_df = pd.DataFrame(data=principal_components, columns=['PC1', 'PC2'])
 pca_df = pd.concat([pca_df, data[['Income_Group']].reset_index(drop=True)], axis=1)  # Add income group
+# Visualize PCA Results
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue='Income_Group', palette='Set2', alpha=0.7)
+plt.title('PCA Result: PC1 vs PC2')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.legend(title='Income Group')
+plt.grid()
+plt.show()
+
+sample_data = data.sample(n=500, random_state=42)
+
+# For example, plot the distribution of 'Income' in this sample
+plt.figure(figsize=(10, 6))
+sns.histplot(sample_data['Income'], kde=True, color='blue')
+plt.title('Income Distribution in Sample of 500 Rows')
+plt.xlabel('Income')
+plt.ylabel('Frequency')
+plt.show()
 
 # Selecting numerical columns for clustering analysis, excluding ID and constant columns
 numeric_cols = data.select_dtypes(include=[np.number]).columns.drop(['ID', 'Z_CostContact', 'Z_Revenue'])
@@ -168,6 +187,9 @@ data['Cluster'] = clusters
 outliers_count = (clusters == -1).sum()
 outliers_count, data['Cluster'].value_counts()
 
+outliers_data = data[data['Cluster'] == -1]
+non_outliers_data = data[data['Cluster'] == 0]
+
 # Plotting the clusters with the identified outliers
 plt.figure(figsize=(10, 6))
 sns.scatterplot(x=reduced_data[:, 0], y=reduced_data[:, 1], hue=clusters, palette="viridis", legend="full", s=50)
@@ -176,9 +198,6 @@ plt.xlabel("PCA Component 1")
 plt.ylabel("PCA Component 2")
 plt.legend(title='Cluster', loc='upper right', bbox_to_anchor=(1.15, 1))
 plt.show()
-
-outliers_data = data[data['Cluster'] == -1]
-non_outliers_data = data[data['Cluster'] == 0]
 
 # Set up the figure and subplots
 fig = plt.figure(constrained_layout=True, figsize=(14, 10))
@@ -221,16 +240,6 @@ plt.show()
 # Displaying the first few rows of outlier data for inspection
 outliers_data = data[data['Cluster'] == -1]
 outliers_data.head()
-
-# Visualize PCA Results
-plt.figure(figsize=(10, 6))
-sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue='Income_Group', palette='Set2', alpha=0.7)
-plt.title('PCA Result: PC1 vs PC2')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.legend(title='Income Group')
-plt.grid()
-plt.show()
 
 # Explained Variance
 explained_variance = pca.explained_variance_ratio_

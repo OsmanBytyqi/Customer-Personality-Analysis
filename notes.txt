@@ -1,0 +1,24 @@
+0* Data Cleaning and "strategjia e trajtimit per vlerat e zbrazeta"
+    convert data types
+    Fill missing values: handle missing values -> Income is filled by its median
+    ToDo: Use clustering to detect noisy data -> Done
+
+1* Aggregation - Agregimi
+    Create a new feature for total spending - Total_Mnt = sums of 6 different columns
+    Create a new - Age = todays date - Year_Birth
+    Create a new - Family_Size = Kidhome + Teenhome
+    Discretize Income column into groups - 0, 30000, 60000, 90000, 120000
+
+2* Discretize - Dsikretizimi
+    Income_Group to Low Medium High Very High
+    ToDO: New Example 1-10, 11-20, 20-40 to young, middle age, senior - Not Done, maybe not necessary
+
+3* Generalization - convert low level attr to high level, example: that age discretize example
+
+4* Normalization:
+    ToDo: min-max using the formula -> Done
+    v' = (v - min_A) / (max_A - min_A) -> Done
+
+5* Data reduction:
+    reduced the size of the dataset using PCA
+    ToDo: sampling (random sampling) -> Done
