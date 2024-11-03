@@ -35,7 +35,13 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
     ```bash
     cd customer-data-analysis
     ```
-3. Install the required packages:
+
+3. Add an Environment Setup Step (optional)
+    ```bash
+    python -m venv env
+    source env/bin/activate
+    ```
+4. Install the required packages:
     ```bash
     pip install -r requirements.txt
     ```
@@ -90,8 +96,3 @@ To reduce the dimensionality and visualize the data:
 ## Contributing
 
 If you would like to contribute to this project, please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
