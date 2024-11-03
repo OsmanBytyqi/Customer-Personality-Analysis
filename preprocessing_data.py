@@ -86,12 +86,14 @@ data['Education'] = data['Education'].replace('2n Cycle', 'Master')
 # Create a new feature for total spending
 data['Total_Mnt'] = data[['MntWines', 'MntFruits', 'MntMeatProducts',
                            'MntFishProducts', 'MntSweetProducts', 'MntGoldProds']].sum(axis=1)
+data['Accepted'] = data[['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5']].any(axis=1).astype(int)
 
 
 ## Dimensionality Reduction
 # remove ID as it does not provide any meaningful information
 # remove Z_CostContact and Z_Revenue as they have the same value for all records
-data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue'], inplace=True)
+data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue'], inplace=True)# Drop the original campaign columns
+data.drop(columns=['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5'], inplace=True)
 print(data.columns)
 
 
@@ -107,7 +109,7 @@ data['Family_Size'] = data['Kidhome'] + data['Teenhome']
 data['Customer_Tenure'] = (datetime.now() - data['Dt_Customer']).dt.days
 
 print(data[['Year_Birth', 'Age', 'Kidhome', 'Teenhome', 'Family_Size', 'Customer_Tenure']].head())
-
+data.drop(columns=['Year_Birth'])
 
 ## Discretization
 #-------------------
@@ -130,19 +132,20 @@ max_total_mnt = data['Total_Mnt'].max()
 # Apply normalization
 data['Total_Mnt_Normalized'] = ((data['Total_Mnt'] - min_total_mnt) / (max_total_mnt - min_total_mnt)) * 100
 data['Total_Mnt_Normalized'] = data['Total_Mnt_Normalized'].round(2)
+total_Mnt_Normalized = data['Total_Mnt_Normalized']
 
 # Display the first few rows of 'Total_Mnt' and 'Total_Mnt_Normalized' for verification
 print(data[['Total_Mnt', 'Total_Mnt_Normalized']].head())
-
+data.drop(columns=['Total_Mnt_Normalized'])
 
 
 # Selected features for analysis
-selected_features = data[['Year_Birth', 'Income', 'Kidhome', 'Teenhome',
+selected_features = data[['Income', 'Kidhome', 'Teenhome',
                           'Recency', 'NumDealsPurchases', 'Total_Mnt', 'Age', 'Family_Size']]
 
 
 # Save cleaned data
-data.to_csv('preprocessed_data.csv', index=False)
+data.to_csv('preprocessed_data1.csv', index=False)
 
 # Analysis of Selected Features
 print(selected_features.describe())
@@ -213,7 +216,7 @@ plt.show()
 
 # Plot the distribution of the min-max normalized Total_Mnt column (0 to 100 range)
 plt.figure(figsize=(10, 6))
-sns.histplot(data['Total_Mnt_Normalized'], kde=True, color='green')
+sns.histplot(total_Mnt_Normalized, kde=True, color='green')
 plt.title('Distribution of Min-Max Normalized Total Spending (0 to 100 range)')
 plt.xlabel('Total_Mnt_Normalized (0-100)')
 plt.ylabel('Frequency')
@@ -252,9 +255,9 @@ plt.ylabel('Frequency')
 plt.show()
 
 # Selecting numerical columns for clustering analysis, excluding ID and constant columns
-numeric_cols = data.select_dtypes(include=[np.number]).columns.drop(['ID', 'Z_CostContact', 'Z_Revenue'])
-numeric_data = data[numeric_cols]
-scaled_data = scaler.fit_transform(numeric_data)
+# numeric_cols = data.select_dtypes(include=[np.number]).columns.drop(['ID', 'Z_CostContact', 'Z_Revenue'])
+# numeric_data = data[numeric_cols]
+scaled_data = scaler.fit_transform(data)
 reduced_data = pca.fit_transform(scaled_data)
 
 # Apply DBSCAN for clustering and noise detection
