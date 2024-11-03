@@ -9,9 +9,9 @@ from sklearn.decomposition import PCA
 data = pd.read_csv('./raw_data.csv', sep=',')
 
 # Remove duplicates based on 'Year_Birth'
-duplicates_specific = data[data.duplicated(subset=['Year_Birth'])]
-print("Duplicated rows based on specific columns (Year_Birth):")
-print(duplicates_specific)
+#duplicates_specific = data[data.duplicated(subset=['Year_Birth'])]
+#print("Duplicated rows based on specific columns (Year_Birth):")
+#print(duplicates_specific)
 
 # Convert data types
 data['Education'] = data['Education'].astype('category')
