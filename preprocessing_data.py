@@ -118,6 +118,26 @@ data.drop(columns=['Dt_Customer'], inplace=True)
 print(data[['Age', 'Family_Size', 'Customer_Tenure']].head())
 
 
+# Outlier detection and handling using IQR
+Q1 = data['Total_Mnt'].quantile(0.25)
+Q3 = data['Total_Mnt'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Visualize outliers before handling
+sns.boxplot(data['Total_Mnt'])
+plt.title('Boxplot for Total_Mnt (Before Handling Outliers)')
+plt.show()
+
+# Cap outliers
+data['Total_Mnt_Capped'] = data['Total_Mnt'].clip(lower=lower_bound, upper=upper_bound)
+
+# Visualize outliers after capping
+sns.boxplot(data['Total_Mnt_Capped'])
+plt.title('Boxplot for Total_Mnt (After Handling Outliers with Capping)')
+plt.show()
+
 ## Discretization
 #-------------------
 age_bins = [0, 35, 55, 100]
@@ -131,7 +151,7 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 print(data[['Age_Group', 'Income_Group']].head())
 
 # Normalizing the 'Total_Mnt' column to a new range (0 to 100) with two decimal places
-# starting with the handling for outliers 
+# starting with the handling for outliers
 
 # Min and Max values of 'Total_Mnt'
 min_total_mnt = data['Total_Mnt'].min()
