@@ -5,6 +5,15 @@ identify patterns. The project covers data preprocessing, exploratory analysis,
 outlier detection, and dimensionality reduction using Principal Component
 Analysis (PCA).
 
+## University and Contributors
+- **University**: University of Pristina
+- **Faculty**: Faculty of Electrical and Computer Engineering
+- **Mentor**: Dr. Sc. Mërgim H. HOTI
+- **Students**:
+  - Fisnik MUSTAFA
+  - Osman BYTYQI
+  - Urim HOXHA
+
 ## Table of Contents
 - [Dataset](#dataset)
 - [Installation](#installation)
@@ -41,7 +50,7 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
    ```
 4. Activate the Environment
    - **macOS/Linux**: Use `source env/bin/activate` to activate the virtual environment.
-   - **Windows**: Use `env\Scripts\activate` to activate the virtual environment. 
+   - **Windows**: Use `env\Scripts\activate` to activate the virtual environment.
 5. Install the required packages:
     ```bash
     pip install -r requirements.txt
