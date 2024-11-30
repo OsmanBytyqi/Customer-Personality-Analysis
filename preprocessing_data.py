@@ -131,6 +131,7 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 print(data[['Age_Group', 'Income_Group']].head())
 
 # Normalizing the 'Total_Mnt' column to a new range (0 to 100) with two decimal places
+# starting with the handling for outliers 
 
 # Min and Max values of 'Total_Mnt'
 min_total_mnt = data['Total_Mnt'].min()
