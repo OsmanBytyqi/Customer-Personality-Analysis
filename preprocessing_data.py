@@ -127,7 +127,7 @@ upper_bound = Q3 + 1.5 * IQR
 
 # Visualize outliers before handling
 sns.boxplot(data['Total_Mnt'])
-plt.title('Boxplot for Total_Mnt (Before Handling Outliers)')
+plt.title('Box plot for Total_Mnt (Before Handling Outliers)')
 plt.show()
 
 # Cap outliers
@@ -135,7 +135,7 @@ data['Total_Mnt_Capped'] = data['Total_Mnt'].clip(lower=lower_bound, upper=upper
 
 # Visualize outliers after capping
 sns.boxplot(data['Total_Mnt_Capped'])
-plt.title('Boxplot for Total_Mnt (After Handling Outliers with Capping)')
+plt.title('Box plot for Total_Mnt (After Handling Outliers with Capping)')
 plt.show()
 
 ## Discretization
