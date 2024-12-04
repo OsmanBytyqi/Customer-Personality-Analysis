@@ -69,22 +69,24 @@ print(negative_values_check)
 marital_status_counts = data['Marital_Status'].value_counts()
 print(marital_status_counts)
 
-# Replace Marital Status: Alone -> Single; (YOLO, Absurd) -> Other
-data['Marital_Status'] = data['Marital_Status'].replace({
-    'Alone': 'Single',
-    'YOLO': 'Other',
-    'Absurd': 'Other',
+# Reduce the Relationship Status to two options: Single, Partnered
+data['Relationship_Status'] = data['Marital_Status'].replace({
+    'Alone': 'Single', 'YOLO': 'Single', 'Absurd': 'Single', 'Divorced': 'Single', 'Widow': 'Single',
+    'Married': 'Partnered', 'Together': 'Partnered'
 })
-print(data['Marital_Status'].value_counts())
+print(data['Relationship_Status'].value_counts())
 
 # Replace Education level: 2n Cycle -> Master
-data['Education'] = data['Education'].replace('2n Cycle', 'Master')
+data['Education'] = data['Education'].replace({
+     'Basic': 'High School', 'Graduation': 'Bachelor', '2n Cycle': 'Master'
+})
+print(data['Education'].value_counts())
 
 
 ## Aggregation
 #-----------------------
 # Create a new feature for total spending
-data['Total_Mnt'] = data[['MntWines', 'MntFruits', 'MntMeatProducts',
+data['Total_Spent'] = data[['MntWines', 'MntFruits', 'MntMeatProducts',
                            'MntFishProducts', 'MntSweetProducts', 'MntGoldProds']].sum(axis=1)
 
 campaign_columns = ['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response']
@@ -95,7 +97,7 @@ data['Accepted'] = (data[campaign_columns].sum(axis=1) > 0).astype(int)
 # remove Z_CostContact and Z_Revenue as they have the same value for all records
 data.drop(columns=['MntWines', 'MntFruits', 'MntMeatProducts',
                            'MntFishProducts', 'MntSweetProducts', 'MntGoldProds'], inplace=True)
-data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue'], inplace=True)
+data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue', 'Marital_Status'], inplace=True)
 data.drop(columns=['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response'], inplace=True)
 print(data.columns)
 
@@ -106,7 +108,7 @@ current_year = datetime.now().year
 data['Age'] = current_year - data['Year_Birth']
 
 # Create Family Size feature
-data['Family_Size'] = data['Kidhome'] + data['Teenhome']
+data['Family_Size'] = data['Relationship_Status'].replace({'Single': 1, 'Partnered': 2}) + data['Kidhome'] + data['Teenhome']
 data.drop(columns=['Kidhome', 'Teenhome'], inplace=True)
 
 # Calculate 'Customer tenure'
@@ -117,25 +119,38 @@ data.drop(columns=['Dt_Customer'], inplace=True)
 
 print(data[['Age', 'Family_Size', 'Customer_Tenure']].head())
 
+# Encoding Categorical Attributes
+    # label encoding for Education
+education_order = {
+    'High School': 0,
+    'Bachelor': 1,
+    'Master': 2,
+    'PhD': 3,
+}
+data['Education'] = data['Education'].replace(education_order)
+
+    # one-hot encoding for Relationship Status
+data = pd.get_dummies(data, columns=['Relationship_Status'])
+
 
 # Outlier detection and handling using IQR
-Q1 = data['Total_Mnt'].quantile(0.25)
-Q3 = data['Total_Mnt'].quantile(0.75)
+Q1 = data['Total_Spent'].quantile(0.25)
+Q3 = data['Total_Spent'].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
 # Visualize outliers before handling
-sns.boxplot(data['Total_Mnt'])
-plt.title('Boxplot for Total_Mnt (Before Handling Outliers)')
+sns.boxplot(data['Total_Spent'])
+plt.title('Boxplot for Total_Spent (Before Handling Outliers)')
 plt.show()
 
 # Cap outliers
-data['Total_Mnt_Capped'] = data['Total_Mnt'].clip(lower=lower_bound, upper=upper_bound)
+data['Total_Spent_Capped'] = data['Total_Spent'].clip(lower=lower_bound, upper=upper_bound)
 
 # Visualize outliers after capping
-sns.boxplot(data['Total_Mnt_Capped'])
-plt.title('Boxplot for Total_Mnt (After Handling Outliers with Capping)')
+sns.boxplot(data['Total_Spent_Capped'])
+plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
 plt.show()
 
 ## Discretization
@@ -150,21 +165,21 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 
 print(data[['Age_Group', 'Income_Group']].head())
 
-# Normalizing the 'Total_Mnt' column to a new range (0 to 100) with two decimal places
+# Normalizing the 'Total_Spent' column to a new range (0 to 100) with two decimal places
 # starting with the handling for outliers
 
-# Min and Max values of 'Total_Mnt'
-min_total_mnt = data['Total_Mnt'].min()
-max_total_mnt = data['Total_Mnt'].max()
+# Min and Max values of 'Total_Spent'
+min_Total_Spent = data['Total_Spent'].min()
+max_Total_Spent = data['Total_Spent'].max()
 
 # Apply normalization
-data['Total_Mnt_Normalized'] = ((data['Total_Mnt'] - min_total_mnt) / (max_total_mnt - min_total_mnt)) * 100
-mnt_normalized = data['Total_Mnt_Normalized'] = data['Total_Mnt_Normalized'].round(2)
-#data.drop(columns=['Total_Mnt_Normalized'], inplace=True)
+data['Total_Spent_Normalized'] = ((data['Total_Spent'] - min_Total_Spent) / (max_Total_Spent - min_Total_Spent)) * 100
+mnt_normalized = data['Total_Spent_Normalized'] = data['Total_Spent_Normalized'].round(2)
+#data.drop(columns=['Total_Spent_Normalized'], inplace=True)
 
 
-# Display the first few rows of 'Total_Mnt' and 'Total_Mnt_Normalized' for verification
-print(data[['Total_Mnt', 'Total_Mnt_Normalized']].head())
+# Display the first few rows of 'Total_Spent' and 'Total_Spent_Normalized' for verification
+print(data[['Total_Spent', 'Total_Spent_Normalized']].head())
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
