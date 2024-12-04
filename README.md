@@ -21,20 +21,6 @@ Analysis (PCA).
 - [Results](#results)
 - [Contributing](#contributing)
 
-## Project Structure
-
-The following structure explains the files and folders included in this project:
-
-```
-├── .gitignore                  # Specifies intentionally untracked files to ignore
-├── LICENSE                     # Contains the license information for the project
-├── README.md                   # Documentation and overview of the project
-├── preprocessed_data.csv       # Dataset after preprocessing
-├── preprocessing_data.py       # Script for handling data preprocessing
-├── raw_data.csv                # Raw, unprocessed dataset
-├── requirements.txt            # List of Python dependencies for the project
-```
-
 ## Dataset
 The dataset (`raw_data.csv`) contains demographic and purchasing information about customers, including their age, income, and spending on various product categories.
 
@@ -83,6 +69,20 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
    - Created a `Family_Size` feature based on `Kidhome` and `Teenhome`.
    - Created a `Customer_Tenure` feature based on `Dt_customer`
 5. **Income Grouping**: Discretized `Income` into categories (`Low`, `Medium`, `High`, `Very High`) for further analysis.
+
+## Project Structure
+
+The following structure explains the files and folders included in this project:
+
+```
+├── .gitignore                  # Specifies intentionally untracked files to ignore
+├── LICENSE                     # Contains the license information for the project
+├── README.md                   # Documentation and overview of the project
+├── preprocessed_data.csv       # Dataset after preprocessing
+├── preprocessing_data.py       # Script for handling data preprocessing
+├── raw_data.csv                # Raw, unprocessed dataset
+├── requirements.txt            # List of Python dependencies for the project
+```
 
 ## Contributing
 
