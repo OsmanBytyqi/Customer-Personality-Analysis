@@ -168,3 +168,5 @@ print(data[['Total_Mnt', 'Total_Mnt_Normalized']].head())
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
+
+# ToDo: restructure the project structure so that plot would be on their separate dir
