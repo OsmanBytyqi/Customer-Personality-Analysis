@@ -133,6 +133,14 @@ data['Education'] = data['Education'].replace(education_order)
 data = pd.get_dummies(data, columns=['Relationship_Status'])
 
 
+# Visualize the distribution of total spent before handling outliers
+sns.displot(data['Total_Spent'], kde=True, height=5.0, aspect=1.5, bins=30)
+
+plt.title('Distribution of Total_Spent (Before Handling Outliers)', fontsize=16)
+plt.xlabel('Total Spent', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
+plt.show()
+
 # Outlier detection and handling using IQR
 Q1 = data['Total_Spent'].quantile(0.25)
 Q3 = data['Total_Spent'].quantile(0.75)
@@ -153,6 +161,15 @@ sns.boxplot(data['Total_Spent_Capped'])
 plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
 plt.show()
 
+
+# Visualize the distribution of total spent after handling outliers
+sns.displot(data['Total_Spent_Capped'], kde=True, height=5.0, aspect=1.5, bins=30)
+plt.title('Distribution of Total_Spent (After Handling Outliers)', fontsize=16)
+plt.xlabel('Total Spent', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
+plt.show()
+
+
 ## Discretization
 #-------------------
 age_bins = [0, 35, 55, 100]
@@ -166,7 +183,6 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 print(data[['Age_Group', 'Income_Group']].head())
 
 # Normalizing the 'Total_Spent' column to a new range (0 to 100) with two decimal places
-# starting with the handling for outliers
 
 # Min and Max values of 'Total_Spent'
 min_Total_Spent = data['Total_Spent'].min()
