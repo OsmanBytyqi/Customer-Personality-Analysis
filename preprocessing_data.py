@@ -183,14 +183,14 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 
 print(data[['Age_Group', 'Income_Group']].head())
 
-# Normalizing the 'Total_Spent' column to a new range (0 to 100) with two decimal places
+# Normalizing the 'Total_Spent_Capped' column to a new range (0 to 100) with two decimal places
 
-# Min and Max values of 'Total_Spent'
-min_Total_Spent = data['Total_Spent'].min()
-max_Total_Spent = data['Total_Spent'].max()
+# Min and Max values of 'Total_Spent_Capped'
+min_Total_Spent = data['Total_Spent_Capped'].min()
+max_Total_Spent = data['Total_Spent_Capped'].max()
 
 # Apply normalization
-data['Total_Spent_Normalized'] = ((data['Total_Spent'] - min_Total_Spent) / (max_Total_Spent - min_Total_Spent)) * 100
+data['Total_Spent_Normalized'] = ((data['Total_Spent_Capped'] - min_Total_Spent) / (max_Total_Spent - min_Total_Spent)) * 100
 mnt_normalized = data['Total_Spent_Normalized'] = data['Total_Spent_Normalized'].round(2)
 #data.drop(columns=['Total_Spent_Normalized'], inplace=True)
 
