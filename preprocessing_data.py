@@ -147,10 +147,15 @@ def cap_outliers_with_iqr(df, columns):
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
 
-        # Cap outliers (values below lower_bound are replaced with lower_bound, and vice versa for upper_bound)
-        df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
+        # Cap outliers while maintaining original type
+        if pd.api.types.is_integer_dtype(df[col]):
+            df[col] = df[col].clip(lower=lower_bound, upper=upper_bound).astype(int)
+        else:  # Float or other numeric types
+            df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
 
     return df
+
+
 
 # Identify all numeric columns in the dataset
 numeric_columns = data.select_dtypes(include=[np.number]).columns
@@ -164,9 +169,9 @@ for selected_column in numeric_columns:
     sns.boxplot(data[selected_column], ax=axes[0])
     axes[0].set_title(f'{selected_column} (Before Handling Outliers)')
 
-    # Plot after handling outliers (data with capped outliers)
-    data_no_outliers = cap_outliers_with_iqr(data.copy(), [selected_column])  # Apply IQR capping for the selected column
-    sns.boxplot(data_no_outliers[selected_column], ax=axes[1])
+    # Apply IQR capping directly to the 'data' dataframe for the selected column
+    cap_outliers_with_iqr(data, [selected_column])  # Directly modify the data dataframe
+    sns.boxplot(data[selected_column], ax=axes[1])
     axes[1].set_title(f'{selected_column} (After Handling Outliers with Capping)')
 
     # Adjust layout to avoid overlapping labels
@@ -198,7 +203,7 @@ data['Total_Spent_Normalized'] = data['Total_Spent_Normalized'].round(2)
 print(data[['Total_Spent', 'Total_Spent_Normalized']].head())
 
 # Drop 'Total_Spent' as it was only used for the calculation
-data.drop(columns=['Total_Spent'], inplace=True)
+data.drop(columns=['Total_Spent_Normalized'], inplace=True)
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
