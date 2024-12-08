@@ -171,6 +171,8 @@ plt.ylabel('Frequency', fontsize=12)
 plt.tight_layout()
 plt.show()
 
+#ToDo: update data with the new capped object
+
 
 ## Discretization
 #-------------------
