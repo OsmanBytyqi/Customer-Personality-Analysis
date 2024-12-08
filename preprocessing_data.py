@@ -135,6 +135,25 @@ data['Education'] = data['Education'].replace(education_order)
 # One-hot encoding for Relationship Status
 data = pd.get_dummies(data, columns=['Relationship_Status'])
 
+
+# Visualize outliers before handling
+sns.boxplot(data['Total_Spent'])
+plt.title('Boxplot for Total_Spent (Before Handling Outliers)')
+plt.show()
+
+
+
+# Visualize outliers before handling
+sns.boxplot(data['Age'])
+plt.title('Boxplot for Age (Before Handling Outliers)')
+plt.show()
+
+# Visualize outliers before handling
+sns.boxplot(data['Income'])
+plt.title('Boxplot for Income (Before Handling Outliers)')
+plt.show()
+
+
 # Function to handle outliers using IQR and capping for all numeric fields
 def cap_outliers_with_iqr(df, columns):
     for col in columns:
@@ -156,6 +175,27 @@ def cap_outliers_with_iqr(df, columns):
 numeric_columns = data.select_dtypes(include=[np.number]).columns
 
 data = cap_outliers_with_iqr(data, numeric_columns)
+
+
+
+
+# Visualize outliers after capping
+sns.boxplot(data['Total_Spent'])
+plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
+plt.show()
+
+
+# Visualize outliers after capping
+sns.boxplot(data['Age'])
+plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
+plt.show()
+
+
+# Visualize outliers after capping
+sns.boxplot(data['Income'])
+plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
+plt.show()
+
 
 ## Discretization
 #-------------------
