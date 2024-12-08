@@ -171,9 +171,6 @@ plt.ylabel('Frequency', fontsize=12)
 plt.tight_layout()
 plt.show()
 
-#ToDo: update data with the new capped object
-
-
 ## Discretization
 #-------------------
 age_bins = [0, 35, 55, 100]
@@ -200,6 +197,9 @@ mnt_normalized = data['Total_Spent_Normalized'] = data['Total_Spent_Normalized']
 
 # Display the first few rows of 'Total_Spent' and 'Total_Spent_Normalized' for verification
 print(data[['Total_Spent', 'Total_Spent_Normalized']].head())
+
+# Drop Total_Spent here as it is the last place we used
+data.drop(columns=['Total_Spent'], inplace=True)
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
