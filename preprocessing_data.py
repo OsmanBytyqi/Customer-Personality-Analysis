@@ -135,24 +135,6 @@ data['Education'] = data['Education'].replace(education_order)
 # One-hot encoding for Relationship Status
 data = pd.get_dummies(data, columns=['Relationship_Status'])
 
-
-# Visualize outliers before handling
-sns.boxplot(data['Total_Spent'])
-plt.title('Boxplot for Total_Spent (Before Handling Outliers)')
-plt.show()
-
-
-# Visualize outliers before handling
-sns.boxplot(data['Age'])
-plt.title('Boxplot for Age (Before Handling Outliers)')
-plt.show()
-
-# Visualize outliers before handling
-sns.boxplot(data['Income'])
-plt.title('Boxplot for Income (Before Handling Outliers)')
-plt.show()
-
-
 # Function to handle outliers using IQR and capping for all numeric fields
 def cap_outliers_with_iqr(df, columns):
     for col in columns:
@@ -173,22 +155,23 @@ def cap_outliers_with_iqr(df, columns):
 # Identify all numeric columns in the dataset
 numeric_columns = data.select_dtypes(include=[np.number]).columns
 
-data = cap_outliers_with_iqr(data, numeric_columns)
 
-# Visualize outliers after capping
-sns.boxplot(data['Total_Spent'])
-plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
-plt.show()
+for selected_column in numeric_columns:
+    # Create a subplot grid (1 row, 2 columns for before and after)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
-# Visualize outliers after capping
-sns.boxplot(data['Age'])
-plt.title('Boxplot for Age (After Handling Outliers with Capping)')
-plt.show()
+    # Plot before handling outliers (original data)
+    sns.boxplot(data[selected_column], ax=axes[0])
+    axes[0].set_title(f'{selected_column} (Before Handling Outliers)')
 
-# Visualize outliers after capping
-sns.boxplot(data['Income'])
-plt.title('Boxplot for Income (After Handling Outliers with Capping)')
-plt.show()
+    # Plot after handling outliers (data with capped outliers)
+    data_no_outliers = cap_outliers_with_iqr(data.copy(), [selected_column])  # Apply IQR capping for the selected column
+    sns.boxplot(data_no_outliers[selected_column], ax=axes[1])
+    axes[1].set_title(f'{selected_column} (After Handling Outliers with Capping)')
+
+    # Adjust layout to avoid overlapping labels
+    plt.tight_layout()
+    plt.show()
 
 ## Discretization
 #-------------------
