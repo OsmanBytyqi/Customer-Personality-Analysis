@@ -198,8 +198,9 @@ mnt_normalized = data['Total_Spent_Normalized'] = data['Total_Spent_Normalized']
 # Display the first few rows of 'Total_Spent' and 'Total_Spent_Normalized' for verification
 print(data[['Total_Spent', 'Total_Spent_Normalized']].head())
 
-# Drop Total_Spent here as it is the last place we used
+# Drop Total_Spent here as it is the last place we used. Drop Total_Spent_Normalized
 data.drop(columns=['Total_Spent'], inplace=True)
+data.drop(columns=['Total_Spent_Normalized'], inplace=True)
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
