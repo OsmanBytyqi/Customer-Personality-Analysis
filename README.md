@@ -1,9 +1,6 @@
 # Customer Data Analysis Project
 
-This project involves analyzing a dataset of customer data to gain insights and
-identify patterns. The project covers data preprocessing, exploratory analysis,
-outlier detection, and dimensionality reduction using Principal Component
-Analysis (PCA).
+This project involves analyzing a dataset of customer data to gain insights and identify patterns. The project covers data preprocessing, exploratory analysis, outlier detection, and dimensionality reduction using Principal Component Analysis (PCA).
 
 ## University and Contributors
 - **University**: University of Pristina
@@ -18,6 +15,7 @@ Analysis (PCA).
 - [Dataset](#dataset)
 - [Installation](#installation)
 - [Data Preprocessing](#data-preprocessing)
+- [Outlier Detection and Handling](#outlier-detection-and-handling)
 - [Results](#results)
 - [Contributing](#contributing)
 
@@ -37,7 +35,7 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/customer-data-analysis.git
+    git clone https://github.com/OsmanBytyqi/Customer-Personality-Analysis
     ```
 2. Navigate to the project directory:
     ```bash
@@ -70,6 +68,21 @@ The dataset (`raw_data.csv`) contains demographic and purchasing information abo
    - Created a `Customer_Tenure` feature based on `Dt_customer`
 5. **Income Grouping**: Discretized `Income` into categories (`Low`, `Medium`, `High`, `Very High`) for further analysis.
 
+## Outlier Detection and Handling
+
+Outliers in the `Total_Spent` column were detected and handled to ensure data quality:
+
+1. **Detection**:
+   - Used the Interquartile Range (IQR) method to identify outliers.
+   - Calculated Q1 (25th percentile) and Q3 (75th percentile), and defined the IQR as Q3 - Q1.
+   - Defined lower and upper bounds as `Q1 - 1.5 * IQR` and `Q3 + 1.5 * IQR`, respectively.
+2. **Visualization**:
+   - Plotted a boxplot to visualize outliers in the `Total_Spent` column before handling.
+3. **Handling**:
+   - Capped outliers by setting values below the lower bound to the lower bound and values above the upper bound to the upper bound.
+4. **Results**:
+   - Visualized the data distribution and boxplot for `Total_Spent` after handling outliers.
+
 ## Project Structure
 
 The following structure explains the files and folders included in this project:
@@ -87,3 +100,4 @@ The following structure explains the files and folders included in this project:
 ## Contributing
 
 If you would like to contribute to this project, please fork the repository and submit a pull request.
+
