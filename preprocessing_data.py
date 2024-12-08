@@ -9,6 +9,7 @@ from sklearn.cluster import DBSCAN
 import matplotlib.gridspec as gridspec
 import seaborn as sns
 
+# Set display options
 pd.set_option('display.max_columns', None)
 
 # Read the data
@@ -21,7 +22,7 @@ print(data.head())
 print(data.shape)
 
 # Get general info about the attributes
-print(data.info)
+print(data.info())
 
 # Get some basic statistics
 print(data.describe())
@@ -43,7 +44,7 @@ missing_info = pd.DataFrame({
     'Percentage (%)': missing_percentage
 })
 
-# filter to show only columns with missing values
+# Filter to show only columns with missing values
 print(missing_info[missing_info['Missing Values'] > 0])
 
 # Handle missing values
@@ -58,7 +59,9 @@ else:
 
 # Check if there are any negative values in numerical attributes
 numerical_columns = [
-    'Income', 'Kidhome', 'Teenhome', 'Recency',	'MntWines',	'MntFruits', 'MntMeatProducts',	'MntFishProducts',	'MntSweetProducts',	'MntGoldProds',	'NumDealsPurchases', 'NumWebPurchases', 'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth'
+    'Income', 'Kidhome', 'Teenhome', 'Recency', 'MntWines', 'MntFruits', 'MntMeatProducts',
+    'MntFishProducts', 'MntSweetProducts', 'MntGoldProds', 'NumDealsPurchases', 'NumWebPurchases',
+    'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth'
 ]
 
 # Count negative values in each of these columns
@@ -78,7 +81,7 @@ print(data['Relationship_Status'].value_counts())
 
 # Replace Education level: 2n Cycle -> Master
 data['Education'] = data['Education'].replace({
-     'Basic': 'High School', 'Graduation': 'Bachelor', '2n Cycle': 'Master'
+    'Basic': 'High School', 'Graduation': 'Bachelor', '2n Cycle': 'Master'
 })
 print(data['Education'].value_counts())
 
@@ -87,16 +90,16 @@ print(data['Education'].value_counts())
 #-----------------------
 # Create a new feature for total spending
 data['Total_Spent'] = data[['MntWines', 'MntFruits', 'MntMeatProducts',
-                           'MntFishProducts', 'MntSweetProducts', 'MntGoldProds']].sum(axis=1)
+                             'MntFishProducts', 'MntSweetProducts', 'MntGoldProds']].sum(axis=1)
 
 campaign_columns = ['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response']
 data['Accepted'] = (data[campaign_columns].sum(axis=1) > 0).astype(int)
 
 ## Dimensionality Reduction
-# remove ID as it does not provide any meaningful information
-# remove Z_CostContact and Z_Revenue as they have the same value for all records
-data.drop(columns=['MntWines', 'MntFruits', 'MntMeatProducts',
-                           'MntFishProducts', 'MntSweetProducts', 'MntGoldProds'], inplace=True)
+# Remove ID as it does not provide any meaningful information
+# Remove Z_CostContact and Z_Revenue as they have the same value for all records
+data.drop(columns=['MntWines', 'MntFruits', 'MntMeatProducts', 'MntFishProducts',
+                   'MntSweetProducts', 'MntGoldProds'], inplace=True)
 data.drop(columns=['ID', 'Z_CostContact', 'Z_Revenue', 'Marital_Status'], inplace=True)
 data.drop(columns=['AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 'Response'], inplace=True)
 print(data.columns)
@@ -120,7 +123,7 @@ data.drop(columns=['Dt_Customer'], inplace=True)
 print(data[['Age', 'Family_Size', 'Customer_Tenure']].head())
 
 # Encoding Categorical Attributes
-    # label encoding for Education
+# Label encoding for Education
 education_order = {
     'High School': 0,
     'Bachelor': 1,
@@ -129,47 +132,30 @@ education_order = {
 }
 data['Education'] = data['Education'].replace(education_order)
 
-    # one-hot encoding for Relationship Status
+# One-hot encoding for Relationship Status
 data = pd.get_dummies(data, columns=['Relationship_Status'])
 
+# Function to handle outliers using IQR and capping for all numeric fields
+def cap_outliers_with_iqr(df, columns):
+    for col in columns:
+        # Calculate Q1 and Q3 for each numeric column
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
 
-# Visualize the distribution of total spent before handling outliers
-sns.displot(data['Total_Spent'], kde=True, height=5.0, aspect=1.5, bins=30)
+        # Calculate lower and upper bounds for outliers
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
 
-plt.title('Distribution of Total_Spent (Before Handling Outliers)', fontsize=16)
-plt.xlabel('Total Spent', fontsize=12)
-plt.ylabel('Frequency', fontsize=12)
-plt.tight_layout()
-plt.show()
+        # Cap outliers (values below lower_bound are replaced with lower_bound, and vice versa for upper_bound)
+        df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
 
-# Outlier detection and handling using IQR
-Q1 = data['Total_Spent'].quantile(0.25)
-Q3 = data['Total_Spent'].quantile(0.75)
-IQR = Q3 - Q1
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
+    return df
 
-# Visualize outliers before handling
-sns.boxplot(data['Total_Spent'])
-plt.title('Boxplot for Total_Spent (Before Handling Outliers)')
-plt.show()
+# Identify all numeric columns in the dataset
+numeric_columns = data.select_dtypes(include=[np.number]).columns
 
-# Cap outliers
-data['Total_Spent_Capped'] = data['Total_Spent'].clip(lower=lower_bound, upper=upper_bound)
-
-# Visualize outliers after capping
-sns.boxplot(data['Total_Spent_Capped'])
-plt.title('Boxplot for Total_Spent (After Handling Outliers with Capping)')
-plt.show()
-
-
-# Visualize the distribution of total spent after handling outliers
-sns.displot(data['Total_Spent_Capped'], kde=True, height=5.0, aspect=1.5, bins=30)
-plt.title('Distribution of Total_Spent (After Handling Outliers)', fontsize=16)
-plt.xlabel('Total Spent', fontsize=12)
-plt.ylabel('Frequency', fontsize=12)
-plt.tight_layout()
-plt.show()
+data = cap_outliers_with_iqr(data, numeric_columns)
 
 ## Discretization
 #-------------------
@@ -183,23 +169,20 @@ data['Income_Group'] = pd.cut(data['Income'], bins=[0, 30000, 60000, 90000, 1200
 
 print(data[['Age_Group', 'Income_Group']].head())
 
-# Normalizing the 'Total_Spent_Capped' column to a new range (0 to 100) with two decimal places
-
-# Min and Max values of 'Total_Spent_Capped'
-min_Total_Spent = data['Total_Spent_Capped'].min()
-max_Total_Spent = data['Total_Spent_Capped'].max()
+# Normalize the 'Total_Spent' column to a new range (0 to 100) with two decimal places
+# Min and Max values of 'Total_Spent'
+min_Total_Spent = data['Total_Spent'].min()
+max_Total_Spent = data['Total_Spent'].max()
 
 # Apply normalization
-data['Total_Spent_Normalized'] = ((data['Total_Spent_Capped'] - min_Total_Spent) / (max_Total_Spent - min_Total_Spent)) * 100
-mnt_normalized = data['Total_Spent_Normalized'] = data['Total_Spent_Normalized'].round(2)
-#data.drop(columns=['Total_Spent_Normalized'], inplace=True)
+data['Total_Spent_Normalized'] = ((data['Total_Spent'] - min_Total_Spent) / (max_Total_Spent - min_Total_Spent)) * 100
+data['Total_Spent_Normalized'] = data['Total_Spent_Normalized'].round(2)
 
 # Display the first few rows of 'Total_Spent' and 'Total_Spent_Normalized' for verification
-print(data[['Total_Spent_Capped', 'Total_Spent_Normalized']].head())
+print(data[['Total_Spent', 'Total_Spent_Normalized']].head())
 
-# Drop Total_Spent here as it is the last place we used. Drop Total_Spent_Normalized
+# Drop 'Total_Spent' as it was only used for the calculation
 data.drop(columns=['Total_Spent'], inplace=True)
-## data.drop(columns=['Total_Spent_Normalized'], inplace=True)
 
 # Save cleaned data
 data.to_csv('preprocessed_data.csv', index=False)
