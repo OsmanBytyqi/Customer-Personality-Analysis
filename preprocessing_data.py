@@ -139,6 +139,7 @@ sns.displot(data['Total_Spent'], kde=True, height=5.0, aspect=1.5, bins=30)
 plt.title('Distribution of Total_Spent (Before Handling Outliers)', fontsize=16)
 plt.xlabel('Total Spent', fontsize=12)
 plt.ylabel('Frequency', fontsize=12)
+plt.tight_layout()
 plt.show()
 
 # Outlier detection and handling using IQR
@@ -167,6 +168,7 @@ sns.displot(data['Total_Spent_Capped'], kde=True, height=5.0, aspect=1.5, bins=3
 plt.title('Distribution of Total_Spent (After Handling Outliers)', fontsize=16)
 plt.xlabel('Total Spent', fontsize=12)
 plt.ylabel('Frequency', fontsize=12)
+plt.tight_layout()
 plt.show()
 
 
