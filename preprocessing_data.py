@@ -139,6 +139,7 @@ data = pd.get_dummies(data, columns=['Relationship_Status'])
 def cap_outliers_with_iqr(df, columns):
     for col in columns:
         # Calculate Q1 and Q3 for each numeric column
+        #
         Q1 = df[col].quantile(0.25)
         Q3 = df[col].quantile(0.75)
         IQR = Q3 - Q1
