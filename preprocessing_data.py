@@ -114,7 +114,7 @@ data['Age'] = current_year - data['Year_Birth']
 data['Family_Size'] = data['Relationship_Status'].replace({'Single': 1, 'Partnered': 2}) + data['Kidhome'] + data['Teenhome']
 data.drop(columns=['Kidhome', 'Teenhome'], inplace=True)
 
-# Calculate 'Customer tenure'
+# Calculate 'Customer tenure' 
 data['Customer_Tenure'] = (datetime.now() - data['Dt_Customer']).dt.days
 
 data.drop(columns=['Year_Birth'], inplace=True)
