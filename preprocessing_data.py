@@ -144,7 +144,7 @@ def cap_outliers_with_iqr(df, columns):
         Q3 = df[col].quantile(0.75)
         IQR = Q3 - Q1
 
-        # Calculate lower and upper bounds for outliers
+        # Calculate lower and upper bounds for outliers 
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
 
